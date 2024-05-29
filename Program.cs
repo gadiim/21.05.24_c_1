@@ -223,13 +223,21 @@ namespace main
             string dictionaryPath = ToCreateDictionaryPath(dictionaryName);
             if (!File.Exists(dictionaryPath))
             {
-                File.Create(dictionaryPath);
+                SortedList<string, string> dictionary = new SortedList<string, string>();
+                string newWord = "noWords";
+                string newTranslate = "";
+                dictionary.Add(newWord, newTranslate);
+                string file = ToSerialize(dictionary);
+                WriteToFile(file, dictionaryPath);
+                //File.Create(dictionaryPath);
                 try
                 {
                     using (StreamWriter streamWriter = new StreamWriter("dict_list.txt", true))
                     {
-                        streamWriter.WriteLine(dictionaryName);
+                        streamWriter.WriteLine("\n" + dictionaryName);
                     }
+
+
                 }
                 catch (Exception ex)
                 {
@@ -240,7 +248,8 @@ namespace main
             else 
             {
                 Console.WriteLine("dictionary with same name exist already");
-            }      
+            }
+            ClickClearScreen();
         }
         static SortedList<string, string> ToCallList()
         {
@@ -337,9 +346,7 @@ namespace main
                 Console.WriteLine(words[i]);
                 if ((i + 1) % 10 == 0 && i != 0)
                 {
-                    Console.WriteLine("\nNext . . .");
-                    Console.ReadKey();
-                    Console.Clear();
+                    ClickClearScreen();
                     PrintHeader();
                 }
             }
@@ -362,6 +369,9 @@ namespace main
                 }
                 else
                 {
+                    string noWords = "noWords";
+                    if (dictionary.ContainsKey(noWords)) { dictionary.Remove(noWords); }
+
                     Console.Write($"enter translation:\t\t");
                     string newTranslate = Console.ReadLine().ToLower();
                     dictionary.Add(newWord, newTranslate);
@@ -531,6 +541,13 @@ namespace main
 
         static void ToClearScreen()
         {
+            Console.Clear();
+        }
+
+        static void ClickClearScreen()
+        {
+            Console.WriteLine("\nNext . . .");
+            Console.ReadKey();
             Console.Clear();
         }
 
